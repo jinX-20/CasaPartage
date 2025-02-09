@@ -3,20 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Splitting</title>
-</head>
-<body>
-    <h1>Expenses  Splitting</h1>
-    <h3>Apple</h3>
-    <p>Price: $50.00</p>
-    <p>Quantity: 1</p>
-    <br>
-    <h3>Bread</h3>
-    <p>Price: $20.00</p>
-    <p>Quantity: 2</p>
+    <title>Product Management</title>
+    <script defer>
+        async function deleteProduct(id) {
+            await fetch(`/delete/${id}`, { method: 'DELETE' });
+            window.location.reload();
+        }
 
-    <form action="/checkout" method="post">
-        <input type="submit" value="Proceed to Checkout">
+        async function updateProduct(id) {
+            const newName = prompt("Enter new name:");
+            const newPrice = prompt("Enter new price:");
+            const newQuantity = prompt("Enter new quantity:");
+            if (newName && newPrice && newQuantity) {
+                await fetch(`/update/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: newName, price: newPrice, quantity: newQuantity })
+                });
+                window.location.reload();
+            }
+        }
+
+        function calculateBill() {
+            let total = 0;
+            const priceElements = document.querySelectorAll(".product-price");
+            priceElements.forEach(priceEl => {
+                total += parseFloat(priceEl.textContent);
+            });
+
+            const perPerson = (total / 4).toFixed(2);
+
+            document.getElementById("totalAmount").textContent = `Total Amount: $${total.toFixed(2)}`;
+            document.getElementById("perPersonAmount").textContent = `Each Person Pays: $${perPerson}`;
+        }
+    </script>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px; padding: 20px; text-align: center;">
+
+    <h1 style="color: #333;">Product Management</h1>
+
+    <!-- Form to Add Product -->
+    <form action="/add" method="POST" style="margin: 20px 0;">
+        <input type="text" name="name" placeholder="Product Name" required style="margin: 5px; padding: 10px;">
+        <input type="number" name="price" placeholder="Price (USD)" required style="margin: 5px; padding: 10px;">
+        <input type="number" name="quantity" placeholder="Quantity" required style="margin: 5px; padding: 10px;">
+        <button type="submit" style="padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer;">
+            Add Product
+        </button>
     </form>
+
+    <h2 style="color: #444;">Product List</h2>
+    <ul style="list-style: none; padding: 0;">
+        <% products.forEach(product => { %>
+            <li style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                <%= product.name %> - $<span class="product-price"><%= product.price %></span> - Qty: <%= product.quantity %>
+                <button onclick="updateProduct('<%= product._id %>')" 
+                    style="margin-left: 10px; padding: 5px 10px; background-color: #ffc107; color: black; border: none; cursor: pointer;">
+                    Update
+                </button>
+                <button onclick="deleteProduct('<%= product._id %>')" 
+                    style="margin-left: 5px; padding: 5px 10px; background-color: #dc3545; color: white; border: none; cursor: pointer;">
+                    Delete
+                </button>
+            </li>
+        <% }) %>
+    </ul>
+
+    <button onclick="calculateBill()" 
+        style="margin-top: 20px; padding: 10px; background-color: #17a2b8; color: white; border: none; cursor: pointer;">
+        Calculate Bill Split
+    </button>
+
+    <h3 id="totalAmount" style="color: #333; margin-top: 10px;"></h3>
+    <h3 id="perPersonAmount" style="color: #333;"></h3>
+
+    <form action="/checkout" method="POST" style="margin-top: 20px;">
+        <button type="submit" 
+            style="padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">
+            Checkout
+        </button>
+    </form>
+
 </body>
 </html>
