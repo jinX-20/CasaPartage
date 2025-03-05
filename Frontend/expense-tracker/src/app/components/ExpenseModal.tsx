@@ -11,6 +11,7 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
   const [participants, setParticipants] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
   const [date, setDate] = useState("");
+  const [splitDetails, setSplitDetails] = useState<{ name: string; amount: number }[]>([]); // Array of objects to store participant and their split amount
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -22,18 +23,24 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
     return () => document.removeEventListener("keydown", handleEsc);
   }, [setIsOpen]);
 
-  if (!isOpen) return null; // Don't render if not open
+  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const expenseData = {
       description,
+      paidBy: "John", 
+      item: description, 
       totalAmount: parseFloat(totalAmount),
-      participants: participants.split(","),
+      participants: participants.split(",").map((participant) => ({
+        name: participant.trim(),
+      })),
       date,
-      splitDetails: [] // Add logic here for split details if needed
+      splitDetails, 
     };
+
+    console.log("Sending expense data to backend:", expenseData);
 
     try {
       const response = await fetch("/api/expenses", {
@@ -47,7 +54,7 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
       const result = await response.json();
       if (response.ok) {
         alert("Expense added successfully!");
-        setIsOpen(false); // Close modal after successful submission
+        setIsOpen(false); 
       } else {
         alert(result.error || "Failed to add expense.");
       }
@@ -55,6 +62,20 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
       console.error("Error:", error);
       alert("Something went wrong.");
     }
+  };
+
+  const handleSplitAmountChange = (participant: string, amount: string) => {
+    setSplitDetails((prev) => {
+      // Update the splitDetails state with the new amount for the participant
+      const existingParticipantIndex = prev.findIndex((split) => split.name === participant);
+      if (existingParticipantIndex !== -1) {
+        const updatedSplitDetails = [...prev];
+        updatedSplitDetails[existingParticipantIndex].amount = parseFloat(amount);
+        return updatedSplitDetails;
+      } else {
+        return [...prev, { name: participant, amount: parseFloat(amount) }];
+      }
+    });
   };
 
   return (
@@ -66,7 +87,6 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
         className="bg-white p-6 rounded-lg shadow-lg w-96 relative"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
       >
-        {/* Modal Header */}
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-black">Add New Expense</h2>
           <button
@@ -77,7 +97,6 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
           </button>
         </div>
 
-        {/* Modal Form */}
         <form className="mt-4 flex flex-col gap-3" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -105,12 +124,26 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
           />
           <input
             type="date"
-            value={date}
+            value={date || "-"}
             onChange={(e) => setDate(e.target.value)}
             className="border p-2 rounded-md focus:ring-2 focus:ring-[#BC8D0B] outline-none text-gray-400"
           />
 
-          {/* Submit Button */}
+          <div>
+            <h3 className="font-medium text-black">Split Amounts:</h3>
+            {participants.split(",").map((participant, idx) => (
+              <div key={idx} className="flex gap-2">
+                <label className="text-sm">{participant.trim()}</label>
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  onChange={(e) => handleSplitAmountChange(participant.trim(), e.target.value)}
+                  className="border p-2 rounded-md focus:ring-2 focus:ring-[#BC8D0B] outline-none text-black"
+                />
+              </div>
+            ))}
+          </div>
+
           <button
             type="submit"
             className="bg-[#BC8D0B] text-white py-2 rounded-lg hover:bg-[#8E6B09] transition"
