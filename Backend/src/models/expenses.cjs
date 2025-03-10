@@ -5,13 +5,8 @@ const participantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  amountOwed: {
-    type: Number,
-    required: true,  // Make sure this is required if it must be provided
-    default: 0,      // Optional: Set a default value (if you want)
-  },
+  status: { type: String, enum: ['pending', 'paid'], default: 'pending' }
 });
-
 
 const expenseSchema = new mongoose.Schema({
   description: { type: String, required: true },
@@ -19,7 +14,6 @@ const expenseSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
   paidBy: { type: String, required: true },
   participants: [participantSchema],
-  status: { type: String, default: 'pending' },
   splitDetails: [
     {
       name: { type: String, required: true },

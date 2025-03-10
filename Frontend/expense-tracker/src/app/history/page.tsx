@@ -1,41 +1,41 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function YourExpenses() {
+export default function ExpenseHistory() {
   const [expenses, setExpenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchExpenses = async () => {
+  const fetchExpensesHistory = async () => {
     try {
-      const response = await fetch("/api/expenses?paidBy=Newton");
+      const response = await fetch("/api/expenses");
 
       if (!response.ok) {
-        console.error("Failed to fetch expenses with status:", response.status);
-        throw new Error("Failed to fetch expenses");
+        console.error("Failed to fetch expenses history with status:", response.status);
+        throw new Error("Failed to fetch expenses history");
       }
 
       const data = await response.json();
 
       if (data.length === 0) {
-        console.log("No expenses found.");
-    }
+        console.log("No expense history found.");
+      }
 
       if (data && Array.isArray(data.expenses)) {
         setExpenses(data.expenses);
       } else {
         console.error("Fetched data does not contain an array of expenses:", data);
-        setExpenses([]); 
+        setExpenses([]);
       }
     } catch (error) {
-      console.error("Error fetching expenses:", error);
-      setExpenses([]); 
+      console.error("Error fetching expenses history:", error);
+      setExpenses([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchExpenses();
+    fetchExpensesHistory();
   }, []);
 
   if (loading) {
@@ -44,9 +44,9 @@ export default function YourExpenses() {
 
   return (
     <div className="p-6 text-black">
-      <h1 className="text-2xl font-semibold">Your Expenses</h1>
+      <h1 className="text-2xl font-semibold">Expense History</h1>
       {expenses.length === 0 ? (
-        <p>No expenses to display.</p>
+        <p>No expense history to display.</p>
       ) : (
         <div className="mt-4 space-y-4">
           {expenses.map((expense: any) => (

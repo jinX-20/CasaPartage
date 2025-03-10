@@ -1,15 +1,49 @@
 const Expense = require("../models/expenses.cjs");
 
+const getDueExpenses = async (req, res) => {
+  try {
+    const { user } = req.query; 
+    const dueExpenses = await Expense.find({
+      "participants.name": user,
+      "participants.status": "pending"
+    });
+
+    if (!dueExpenses.length) {
+      return res.status(200).json({ success: true, message: "No due expenses found", expenses: [] });
+    }
+
+    res.status(200).json({ success: true, expenses: dueExpenses });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch due expenses" });
+  }
+};
+
+
 const getAllExpenses = async (req, res) => {
   try {
     const expenses = await Expense.find(); // Query the expenses from the database
-    if (!expenses) {
-      return res.status(404).json({ error: "No expenses found" });
+    if (expenses.length === 0) {
+      return res.status(200).json({ success: true, message: "No expenses found", expenses: [] });
     }
-    res.json(expenses); // Return the expenses as JSON
+    res.status(200).json({ success: true, expenses });
   } catch (error) {
-    console.error("Error fetching expenses:", error);
     res.status(500).json({ error: "Failed to fetch expenses" });
+  }
+};
+
+const getYourExpenses = async (req, res) => {
+  try {
+    const { paidBy } = req.query; 
+
+    const expenses = await Expense.find({ paidBy });
+
+    if (expenses.length === 0) {
+      return res.status(200).json({ success: true, message: "No expenses found", expenses: [] });
+    }
+
+    res.status(200).json({ success: true, expenses });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error });
   }
 };
 
@@ -17,32 +51,25 @@ const getAllExpenses = async (req, res) => {
 
 const addExpense = async (req, res) => {
   try {
-    const { item, amount, paidBy, participants, date } = req.body;
+    const { description, totalAmount, participants, date, splitDetails, paidBy } = req.body;
 
-    if (!item || !amount || !paidBy || !participants || !Array.isArray(participants)) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
-    }
-    if (date === "") {
-      date = null;
-    }
-
-    // Create a new expense entry
     const newExpense = new Expense({
-      item,
-      amount,
+      description,
+      totalAmount,
+      date,
       paidBy,
       participants,
-      status: "unpaid",
-      date,
+      splitDetails
     });
 
     await newExpense.save();
-
-    res.status(201).json({ success: true, message: "Expense added successfully", newExpense });
+    res.status(201).json({ message: "Expense added successfully", newExpense });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error });
+    console.error("Error while saving expense:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };
+
 
 const markExpenseAsPaid = async (req, res) => {
   try {
@@ -56,7 +83,7 @@ const markExpenseAsPaid = async (req, res) => {
     }
 
     // Check if the user who paid matches the "paidBy" field in the expense
-    if (expense.paidBy !== paidBy) {
+    if (String(expense.paidBy) !== String(paidBy)) {
       return res.status(403).json({ success: false, message: "You are not authorized to mark this as paid" });
     }
 
@@ -86,4 +113,4 @@ const deleteExpense = async (req, res) => {
   }
 };
 
-module.exports = { getAllExpenses, addExpense, deleteExpense, markExpenseAsPaid };
+module.exports = { getAllExpenses, addExpense, deleteExpense, markExpenseAsPaid, getYourExpenses, getDueExpenses};

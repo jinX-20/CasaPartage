@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ExpenseDetail {
   description: string;
   total: number;
+  youramount: number;
   others: string;
   date: string;
 }
@@ -12,11 +13,12 @@ interface ExpenseDetail {
 interface DueExpenseProps {
   name: string;
   amount: number;
-  expenses: ExpenseDetail[]; // Array of multiple expenses
+  expenses: ExpenseDetail[]; 
 }
 
 export default function DueExpenseCard({ name, amount, expenses }: DueExpenseProps) {
   const [showDetails, setShowDetails] = useState(true);
+
 
   return (
     <div className="bg-[#EAE3CF] shadow-lg rounded-lg p-4 border border-gray-300">
@@ -34,10 +36,12 @@ export default function DueExpenseCard({ name, amount, expenses }: DueExpensePro
           {expenses.map((expense, index) => (
             <div key={index} className="mb-3">
               <p>• <strong>Description:</strong> {expense.description}</p>
+              <p><strong>Your amount:</strong> {expense.youramount}</p>
               <p><strong>Total amount:</strong> {expense.total}</p>
               <p><strong>Others:</strong> {expense.others}</p>
-              <p><strong>Date:</strong> {expense.date}</p>
-              <hr className="border-gray-300 my-2" /> {/* Adds spacing between expenses */}
+              <p><strong>Date:</strong> {expense.date ? expense.date : '-'}</p>
+
+              <hr className="border-gray-300 my-2" /> 
             </div>
           ))}
           <button className="text-xs text-red-600 mt-2 hover:underline">Report discrepancy</button>

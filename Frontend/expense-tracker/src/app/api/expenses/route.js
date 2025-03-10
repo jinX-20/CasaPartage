@@ -24,12 +24,29 @@ export async function POST(req) {
 }
 
 
-
-export async function GET() {
+export async function GET(req) {
   try {
-    const response = await fetch("http://localhost:5000/api/expenses");
+    const url = new URL(req.url);
+    const paidBy = url.searchParams.get('paidBy');
+    const userr = url.searchParams.get('user');
+
+    let response;
+    let apiUrl;
+
+    // If 'paidBy' is provided, fetch expenses filtered by the 'paidBy' parameter
+    if (paidBy) {
+      apiUrl = `http://localhost:5000/api/expenses/your-expenses?paidBy=${paidBy}`;
+    } else if (userr) {
+      apiUrl = `http://localhost:5000/api/expenses/due-expenses?user=${userr}`;
+    } else{
+      apiUrl = 'http://localhost:5000/api/expenses/get-all-expenses';
+    }
+
+    // Make the request to the backend
+    response = await fetch(apiUrl);
     const data = await response.json();
 
+    // Check if the response is OK
     if (!response.ok) {
       throw new Error(data.message || "Failed to fetch expenses");
     }

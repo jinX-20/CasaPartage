@@ -11,8 +11,9 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
   const [participants, setParticipants] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
   const [date, setDate] = useState("");
-  const [splitDetails, setSplitDetails] = useState<{ name: string; amount: number }[]>([]); // Array of objects to store participant and their split amount
-
+  const [splitDetails, setSplitDetails] = useState<{ name: string; amount: number }[]>([]);
+  const [splitEqually, setSplitEqually] = useState(false);
+  
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -27,20 +28,21 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const splitEqualAmount = (parseFloat(totalAmount) / participants.split(",").length).toFixed(2);
+    const calculatedSplitDetails = splitEqually
+      ? participants.split(",").map((participant) => ({ name: participant.trim(), amount: splitEqualAmount }))
+      : splitDetails;
 
     const expenseData = {
       description,
-      paidBy: "John", 
-      item: description, 
+      paidBy: "Newton",
       totalAmount: parseFloat(totalAmount),
       participants: participants.split(",").map((participant) => ({
         name: participant.trim(),
       })),
       date,
-      splitDetails, 
+      splitDetails: calculatedSplitDetails
     };
-
-    console.log("Sending expense data to backend:", expenseData);
 
     try {
       const response = await fetch("/api/expenses", {
@@ -54,7 +56,7 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
       const result = await response.json();
       if (response.ok) {
         alert("Expense added successfully!");
-        setIsOpen(false); 
+        setIsOpen(false);
       } else {
         alert(result.error || "Failed to add expense.");
       }
@@ -66,26 +68,26 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
 
   const handleSplitAmountChange = (participant: string, amount: string) => {
     setSplitDetails((prev) => {
-      // Update the splitDetails state with the new amount for the participant
       const existingParticipantIndex = prev.findIndex((split) => split.name === participant);
+      const roundedAmount = parseFloat(amount).toFixed(2);
       if (existingParticipantIndex !== -1) {
         const updatedSplitDetails = [...prev];
-        updatedSplitDetails[existingParticipantIndex].amount = parseFloat(amount);
+        updatedSplitDetails[existingParticipantIndex].amount = parseFloat(roundedAmount);
         return updatedSplitDetails;
       } else {
-        return [...prev, { name: participant, amount: parseFloat(amount) }];
+        return [...prev, { name: participant, amount: parseFloat(roundedAmount) }];
       }
     });
   };
-
+  
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-      onClick={() => setIsOpen(false)} // Close on background click
+      onClick={() => setIsOpen(false)}
     >
       <div
         className="bg-white p-6 rounded-lg shadow-lg w-96 relative"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-black">Add New Expense</h2>
@@ -129,20 +131,32 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
             className="border p-2 rounded-md focus:ring-2 focus:ring-[#BC8D0B] outline-none text-gray-400"
           />
 
-          <div>
-            <h3 className="font-medium text-black">Split Amounts:</h3>
-            {participants.split(",").map((participant, idx) => (
-              <div key={idx} className="flex gap-2">
-                <label className="text-sm">{participant.trim()}</label>
-                <input
-                  type="number"
-                  placeholder="Amount"
-                  onChange={(e) => handleSplitAmountChange(participant.trim(), e.target.value)}
-                  className="border p-2 rounded-md focus:ring-2 focus:ring-[#BC8D0B] outline-none text-black"
-                />
-              </div>
-            ))}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={splitEqually}
+              onChange={(e) => setSplitEqually(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <label className="text-black">Split Equally</label>
           </div>
+
+          {!splitEqually && (
+            <div>
+              <h3 className="font-medium text-black">Split Amounts:</h3>
+              {participants.split(",").map((participant, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <label className="text-sm">{participant.trim()}</label>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    onChange={(e) => handleSplitAmountChange(participant.trim(), e.target.value)}
+                    className="border p-2 rounded-md focus:ring-2 focus:ring-[#BC8D0B] outline-none text-black"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           <button
             type="submit"
