@@ -50,26 +50,23 @@ export default function YourExpenses() {
       ) : (
         <div className="mt-4 space-y-4">
           {expenses.map((expense: any) => (
-            <div key={expense._id} className="bg-white p-4 rounded-md shadow-md">
-              <h2 className="font-bold">{expense.description}</h2>
-              <p>Amount: {expense.totalAmount}</p>
+            <div key={expense._id} className="bg-[#EAE3CF] p-4 rounded-lg shadow-lg border border-gray-300">
+              <h2 className="text-lg font-bold">{expense.description}</h2>
+              <p>Total Amount: Rs.{expense.totalAmount}/-</p>
               <p>Date: {expense.date ? new Date(expense.date).toLocaleDateString() : "-"}</p>
               <p>Paid By: {expense.paidBy}</p>
-              <p>
-                Participants:{" "}
-                {expense.participants.map((participant: any, idx: number) => (
-                  <span key={idx}>{participant.name} ({participant.status}){idx !== expense.participants.length - 1 ? ", " : ""}</span>
-                ))}
-              </p>
               {expense.splitDetails?.length > 0 && (
-                <div className="mt-2">
-                  <h3>Split Details:</h3>
-                  <ul>
-                    {expense.splitDetails.map((detail: any, idx: number) => (
-                      <li key={idx}>
-                        {detail.name}: {detail.amount}
-                      </li>
-                    ))}
+                <div className="mt-2 bg-[#EFEDEA] p-3 rounded-md">
+                  <h3 className="font-medium">Split Details:</h3>
+                  <ul className="text-sm space-y-1">
+                    {expense.splitDetails.map((detail: any, idx: number) => {
+                      const participant = expense.participants.find((p: any) => p.name === detail.name);
+                      return (
+                        <li key={idx}>
+                          {detail.name}: Rs.{detail.amount}/- ({participant ? participant.status : "-"})
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

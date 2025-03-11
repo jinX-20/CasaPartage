@@ -23,6 +23,6 @@ router.get('/get-all-expenses', getAllExpenses);
 router.delete("/:id", deleteExpense);
 
 // Mark expense as paid
-router.post("/markAsPaid", markExpenseAsPaid);
+router.post("/due-expenses/mark-as-paid", markExpenseAsPaid);
 
 module.exports = router;

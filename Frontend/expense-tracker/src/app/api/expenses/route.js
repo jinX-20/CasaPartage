@@ -4,10 +4,25 @@ import Expense from "../../../../../../Backend/src/models/expenses.cjs"; // Adju
 
 export async function POST(req) {
   try {
-    const body = await req.json();
-    console.log('Received body in route.js:', body);  // Log the received body to inspect it
+    const url = new URL(req.url);
+    const isMarkAsPaid = url.searchParams.get('mark-as-paid'); 
 
-    const response = await fetch('http://localhost:5000/api/expenses', {
+    let response;
+    let apiUrl;
+
+    console.log("HERE in route.js: ");
+
+    if (isMarkAsPaid) {
+      apiUrl = 'http://localhost:5000/api/expenses/due-expenses/mark-as-paid'; 
+      console.log("HERE in isMarkAsPaid: ");
+    } else {
+      apiUrl = 'http://localhost:5000/api/expenses';
+      console.log("HERE in add expense ");
+    }
+
+    const body = await req.json();
+
+    response = await fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -33,7 +48,6 @@ export async function GET(req) {
     let response;
     let apiUrl;
 
-    // If 'paidBy' is provided, fetch expenses filtered by the 'paidBy' parameter
     if (paidBy) {
       apiUrl = `http://localhost:5000/api/expenses/your-expenses?paidBy=${paidBy}`;
     } else if (userr) {

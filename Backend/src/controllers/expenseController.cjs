@@ -70,28 +70,25 @@ const addExpense = async (req, res) => {
   }
 };
 
-
 const markExpenseAsPaid = async (req, res) => {
   try {
-    const { expenseId, paidBy } = req.body;  // expenseId to identify the expense and paidBy for the user who paid
+    const { expenseIds, user } = req.body; 
+    const expenses = await Expense.find({ '_id': { $in: expenseIds } });
 
-    // Find the expense
-    const expense = await Expense.findById(expenseId);
+    if (expenses.length === 0) {
+      return res.status(404).json({ success: false, message: "No expenses found" });
+    }
+    for (const expense of expenses) {
+      const participant = expense.participants.find(p => p.name === user);
 
-    if (!expense) {
-      return res.status(404).json({ success: false, message: "Expense not found" });
+      if (participant) {
+        participant.status = "paid"; 
+      }
     }
 
-    // Check if the user who paid matches the "paidBy" field in the expense
-    if (String(expense.paidBy) !== String(paidBy)) {
-      return res.status(403).json({ success: false, message: "You are not authorized to mark this as paid" });
-    }
+    await Promise.all(expenses.map(expense => expense.save()));
 
-    // Update the expense status to "paid"
-    expense.status = "paid";
-    await expense.save();
-
-    res.status(200).json({ success: true, message: "Expense marked as paid", updatedExpense: expense });
+    res.status(200).json({ success: true, message: "All expenses marked as paid" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error", error });
   }
