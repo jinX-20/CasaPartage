@@ -9,7 +9,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,7 +20,7 @@ export default function RootLayout({
       <link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Acme&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:wght@300&family=Julee&family=Pangolin&display=swap" rel="stylesheet"/>
       </head>
 
-      <body>{children}</body>
+      <body className="h-full">{children}</body>
     </html>
   )
 }

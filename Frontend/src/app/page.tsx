@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <>
@@ -7,8 +9,12 @@ export default function Home() {
       <button className="text-[#E3B89F] md-custom-md:text-3xl md-custom-sm:text-xl md-custom-xsm:text-lg border-none bg-white font-bold cursor-pointer inline-block">RoomieManager</button>
     </div>
     <div>
-      <button className="py-2 md-custom-md:px-4 md-custom-md:ml-2.5 border-none rounded cursor-pointer md-custom-md:text-sm md-custom-md:mr-2.5 md-custom-sm:px-3 md-custom-sm:ml-2 md-custom-sm:text-sm md-custom-sm:mr-0.5 md-custom-xsm:px-1 md-custom-xsm:ml-0.5 md-custom-xsm:text-sm md-custom-xsm:mr-0 bg-[#BC8D0B] text-white hover:bg-[#7d5e07]">Login</button>
-      <button className="py-2 md-custom-md:px-4 md-custom-md:ml-2.5 border-none rounded cursor-pointer md-custom-md:text-sm md-custom-md:mr-2.5 md-custom-sm:px-3 md-custom-sm:ml-2 md-custom-sm:text-sm md-custom-sm:mr-0.5 md-custom-xsm:px-1 md-custom-xsm:ml-0.5 md-custom-xsm:text-sm md-custom-xsm:mr-0 bg-[#BC8D0B] text-white hover:bg-[#7d5e07]">Register</button>
+      <Link href="/Authentication/Login">
+        <button className="py-2 md-custom-md:px-4 md-custom-md:ml-2.5 border-none rounded cursor-pointer md-custom-md:text-sm md-custom-md:mr-2.5 md-custom-sm:px-3 md-custom-sm:ml-2 md-custom-sm:text-sm md-custom-sm:mr-0.5 md-custom-xsm:px-1 md-custom-xsm:ml-0.5 md-custom-xsm:text-sm md-custom-xsm:mr-0 bg-[#BC8D0B] text-white hover:bg-[#7d5e07]">Login</button>
+      </Link>
+      <Link href="/Authentication/Signup">
+        <button className="py-2 md-custom-md:px-4 md-custom-md:ml-2.5 border-none rounded cursor-pointer md-custom-md:text-sm md-custom-md:mr-2.5 md-custom-sm:px-3 md-custom-sm:ml-2 md-custom-sm:text-sm md-custom-sm:mr-0.5 md-custom-xsm:px-1 md-custom-xsm:ml-0.5 md-custom-xsm:text-sm md-custom-xsm:mr-0 bg-[#BC8D0B] text-white hover:bg-[#7d5e07]">Register</button>
+      </Link>
     </div>
   </div>
 
@@ -20,7 +26,7 @@ export default function Home() {
       <p className="text-[#BC8D0B] text-lg mt-7 mx-2 font-julee">Manage chores, expenses, and decisions effortlessly under one roof!</p>
       <button className="bg-[#BC8D0B] text-white hover:bg-[#7d5e07] py-1.5 px-2 rounded my-5">Get Started!</button>
     </div>
-    <img src="/hero_pic.jpg" alt="Roommates image" className="h-auto w-3/5"/>
+    <img src="/hero_pic.jpg" alt="Roommates image" className="h-auto md-custom-md:w-3/5 md-custom-xsm:full"/>
   </div>
 
   {/* Features */}
