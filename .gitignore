@@ -2,3 +2,8 @@ node_modules/
 frontend/node_modules/
 backend/node_modules/
 backend/.env
+Frontend/.env
+Frontend/.next/
+Frontend/dist/
+Frontend/expense-tracker/.next
+Frontend/expense-tracker/node_modules/
