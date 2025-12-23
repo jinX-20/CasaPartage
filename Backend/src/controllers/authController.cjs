@@ -1,9 +1,15 @@
-const user = require("../models/user");
-const bcrypt = require("bcryptjs");
-const JWT = require("jsonwebtoken")
+User = require("../models/user.cjs");
+bcrypt = require("bcrypt");
+JWT = require("jsonwebtoken");
 
 const registerController = async (req, res) => {
-    const {name, email, password} = req.body;
+    console.log("Inside registerController");
+    console.log("Request Body:", req.body);
+    const data = req.body.data;
+    const name = data.name;
+    const email = data.email;
+    const password = data.password;
+    console.log("Name:", name, "Email:", email, "Password:", password);
     try {        
         // Validation
         if(!name || !email || !password){
@@ -14,7 +20,7 @@ const registerController = async (req, res) => {
         }
 
         // check if the user already exists
-        const existing = await user.findOne({ email })
+        const existing = await User.findOne({ email })
         if(existing){
             return res.status(400).send({
                 success: false,
@@ -26,10 +32,8 @@ const registerController = async (req, res) => {
         const salt = bcrypt.genSaltSync(10); // always before creation
         const hashedPassword = await bcrypt.hash(password, salt);
 
-
-
         // create new user
-        const newUser = await user.create({name, email, password: hashedPassword})
+        const newUser = await User.create({name, email, password: hashedPassword})
         res.status(201).send({
             success: true,
             message: 'Successfully Registered',
@@ -59,7 +63,7 @@ const loginController = async (req, res) => {
 
         // checking the user
 
-        const existingUser = await user.findOne({ email });
+        const existingUser = await User.findOne({ email });
         if (!existingUser) {
             return res.status(401).send({
                 success: false,

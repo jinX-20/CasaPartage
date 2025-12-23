@@ -1,4 +1,4 @@
-const Roommate = require("../models/roommate");
+const Roommate = require("../models/roommate.cjs");
 
 // Get a roommate by ID
 const getRoommateById = async (req, res) => {

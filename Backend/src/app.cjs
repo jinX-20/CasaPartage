@@ -24,12 +24,12 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // Routes
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth.cjs');
 const expensesRoutes = require('./routes/expenses.cjs');
-const roommatesRoutes = require('./routes/roommate');
-const groupRoutes = require('./routes/group');
-const billRoutes = require('./routes/bill');
-const taskRoutes = require('./routes/task');
+const roommatesRoutes = require('./routes/roommate.cjs');
+const groupRoutes = require('./routes/group.cjs');
+const billRoutes = require('./routes/bill.cjs');
+const taskRoutes = require('./routes/task.cjs');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expensesRoutes);

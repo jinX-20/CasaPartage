@@ -1,5 +1,5 @@
-const Task = require("../models/task");
-const User = require("../models/user");
+const Task = require("../models/task.cjs");
+const User = require("../models/user.cjs");
 
 // Get all tasks
 exports.getAllTasks = async (req, res) => {

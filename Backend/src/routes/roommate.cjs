@@ -1,5 +1,5 @@
 const express = require('express');
-const { getRoommateById, getAllRoommates, addRoommate, deleteRoommate } = require('../controllers/roommateController');
+const { getRoommateById, getAllRoommates, addRoommate, deleteRoommate } = require('../controllers/roommateController.cjs');
 
 const router = express.Router();
 

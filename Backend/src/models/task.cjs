@@ -5,5 +5,4 @@ const taskSchema = new mongoose.Schema({
   assignee: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   status: { type: String, default: 'pending' },
 });
-
 module.exports = mongoose.model('Task', taskSchema);

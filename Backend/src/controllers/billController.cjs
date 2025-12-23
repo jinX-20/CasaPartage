@@ -1,5 +1,5 @@
-const Bill = require("../models/bill");
-const User = require("../models/user");
+const Bill = require("../models/bill.cjs");
+const User = require("../models/user.cjs");
 
 // Get all bills
 exports.getAllBills = async (req, res) => {

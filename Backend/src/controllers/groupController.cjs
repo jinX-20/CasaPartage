@@ -1,7 +1,7 @@
-const Group = require("../models/group");
-const User = require("../models/user");
-const Task = require("../models/task");
-const Bill = require("../models/bill");
+const Group = require("../models/group.cjs");
+const User = require("../models/user.cjs");
+const Task = require("../models/task.cjs");
+const Bill = require("../models/bill.cjs");
 
 // Get all groups
 exports.getAllGroups = async (req, res) => {
