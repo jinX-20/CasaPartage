@@ -51,7 +51,12 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-    const {email, password} = req.body;
+    console.log("Inside loginController");
+    
+    const data = req.body.data;
+    const email = data.email;
+    const password = data.password;
+    console.log("Email:", email, "Password:", password);
     try {
         // Validation
         if(!email || !password){
@@ -62,7 +67,6 @@ const loginController = async (req, res) => {
         }
 
         // checking the user
-
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
             return res.status(401).send({
