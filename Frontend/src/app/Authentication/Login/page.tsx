@@ -1,22 +1,29 @@
 'use client';
 
-import { login } from './actions';
-import { useState } from 'react';
+import { login, handleLoginResponse } from './actions';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useUser } from '../../UserContext/page';
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const { user, setUser } = useUser();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
-      await login(formData);
+      const response = await login(formData);
       setMessage('Login successful! Redirecting to dashboard...');
-      // TODO: Implement actual routing after login
+      console.log("Login response:", response);
+      setUser(response);
+
+      if (response) {
+        setTimeout(() => router.push('/expense-tracker'), 2000);
+      }
     } catch (error) {
       console.error("Login failed:", error);
       setMessage('Login failed. Please try again.');

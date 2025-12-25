@@ -1,5 +1,7 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 export async function login (formData: FormData) {
   try {
     const data = {
@@ -11,15 +13,29 @@ export async function login (formData: FormData) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data }),
     });
-    const responseText = await response.text();
+    const responseText = await response.json();
     if (!response.ok) {
       console.error("Failed to Login:", responseText);
       throw new Error('Failed to login');
     } else {
-      return responseText;
+        return handleLoginResponse(responseText);
     }
   } catch (error) {
     console.error('Error:', error);
     throw error;
   }
+}
+
+export async function handleLoginResponse(loginResponse: any) {
+  const { token, userData } = loginResponse;
+
+  cookies().set("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  // return ONLY user info
+  return userData;
 }
