@@ -3,13 +3,10 @@ bcrypt = require("bcrypt");
 JWT = require("jsonwebtoken");
 
 const registerController = async (req, res) => {
-    console.log("Inside registerController");
-    console.log("Request Body:", req.body);
     const data = req.body.data;
     const name = data.name;
     const email = data.email;
     const password = data.password;
-    console.log("Name:", name, "Email:", email, "Password:", password);
     try {        
         // Validation
         if(!name || !email || !password){
@@ -51,12 +48,9 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-    console.log("Inside loginController");
-    
     const data = req.body.data;
     const email = data.email;
     const password = data.password;
-    console.log("Email:", email, "Password:", password);
     try {
         // Validation
         if(!email || !password){

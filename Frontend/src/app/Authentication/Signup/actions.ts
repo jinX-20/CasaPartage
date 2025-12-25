@@ -7,7 +7,6 @@ export async function register(formData: FormData) {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    console.log(data);
     const response = await fetch("http://localhost:5000/api/auth/register", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -18,7 +17,6 @@ export async function register(formData: FormData) {
       console.error("Failed to register:", responseText);
       throw new Error('Failed to register');
     } else {
-      console.log("User registered successfully:", responseText);
       return responseText;
     }
   } catch (error) {

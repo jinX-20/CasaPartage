@@ -16,7 +16,7 @@ export default function Home() {
       const formData = new FormData(e.currentTarget);
       await login(formData);
       setMessage('Login successful! Redirecting to dashboard...');
-      // TODO: Route to dashboard after successful login
+      // TODO: Implement actual routing after login
     } catch (error) {
       console.error("Login failed:", error);
       setMessage('Login failed. Please try again.');

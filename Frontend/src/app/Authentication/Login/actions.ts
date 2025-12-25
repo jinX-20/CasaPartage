@@ -6,7 +6,6 @@ export async function login (formData: FormData) {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    console.log(data);
     const response = await fetch("http://localhost:5000/api/auth/login", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -17,7 +16,6 @@ export async function login (formData: FormData) {
       console.error("Failed to Login:", responseText);
       throw new Error('Failed to login');
     } else {
-      console.log("User logged in successfully:", responseText);
       return responseText;
     }
   } catch (error) {
