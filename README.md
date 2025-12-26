@@ -5,8 +5,11 @@
 
 ### What's pending?
 - Document changes made so far and insights.
-- Expense tracker handle with given user id.
-- Create a initial dashboard with desired features including expense tracker.
+- Test due expenses.
 - Fix css of expense handle.
+- Refreshing logs you out.
+- add expense: backend call is in the tsx, we need to put it in api/expenses/route
+- delete expense tracker directory in frontend/
+- Create a initial dashboard with desired features including expense tracker.
 - My Account page.
 - Create a room and join feature.
