@@ -1,10 +1,11 @@
 const Expense = require("../models/expenses.cjs");
+const User = require("../models/user.cjs");
 
 const getDueExpenses = async (req, res) => {
   try {
     const { user } = req.query; 
     const dueExpenses = await Expense.find({
-      "participants.name": user,
+      "participants.userId": user,
       "participants.status": "pending"
     });
 
@@ -47,8 +48,6 @@ const getYourExpenses = async (req, res) => {
   }
 };
 
-
-
 const addExpense = async (req, res) => {
   try {
     const { description, totalAmount, participants, date, splitDetails, paidBy } = req.body;
@@ -61,6 +60,12 @@ const addExpense = async (req, res) => {
       participants,
       splitDetails
     });
+    for (const participant of newExpense.participants) {
+      participant.userId = getUserIdFromName(participant.name); 
+    }
+    for (const split of newExpense.splitDetails) {
+      split.userId = getUserIdFromName(split.name); 
+    }
 
     await newExpense.save();
     res.status(201).json({ message: "Expense added successfully", newExpense });
@@ -69,6 +74,11 @@ const addExpense = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+const getUserIdFromName = (userName) => {
+  const user = User.findOne({ name: userName });
+  return user._id;
+}
 
 const markExpenseAsPaid = async (req, res) => {
   try {
@@ -79,7 +89,7 @@ const markExpenseAsPaid = async (req, res) => {
       return res.status(404).json({ success: false, message: "No expenses found" });
     }
     for (const expense of expenses) {
-      const participant = expense.participants.find(p => p.name === user);
+      const participant = expense.participants.find(p => p.userId === user);
 
       if (participant) {
         participant.status = "paid"; 

@@ -5,7 +5,8 @@ const participantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: { type: String, enum: ['pending', 'paid'], default: 'pending' }
+  status: { type: String, enum: ['pending', 'paid'], default: 'pending' },
+  userId : { type: String }
 });
 
 const expenseSchema = new mongoose.Schema({
@@ -17,6 +18,7 @@ const expenseSchema = new mongoose.Schema({
   splitDetails: [
     {
       name: { type: String, required: true },
+      userId : { type: String },
       amount: { type: Number, required: true }
     }
   ]

@@ -14,7 +14,7 @@ router.get('/your-expenses', getYourExpenses);
 
 router.get('/due-expenses', getDueExpenses);
 
-router.post("/", addExpense);
+router.post("/add-expense", addExpense);
 
 // Get all expenses
 router.get('/get-all-expenses', getAllExpenses);

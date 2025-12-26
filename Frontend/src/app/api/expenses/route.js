@@ -6,14 +6,10 @@ export async function POST(req) {
     let response;
     let apiUrl;
 
-    console.log("HERE in route.js: ");
-
     if (isMarkAsPaid) {
       apiUrl = 'http://localhost:5000/api/expenses/due-expenses/mark-as-paid'; 
-      console.log("HERE in isMarkAsPaid: ");
     } else {
       apiUrl = 'http://localhost:5000/api/expenses';
-      console.log("HERE in add expense ");
     }
 
     const body = await req.json();
