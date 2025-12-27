@@ -9,7 +9,7 @@ export async function POST(req) {
     if (isMarkAsPaid) {
       apiUrl = 'http://localhost:5000/api/expenses/due-expenses/mark-as-paid'; 
     } else {
-      apiUrl = 'http://localhost:5000/api/expenses';
+      apiUrl = 'http://localhost:5000/api/expenses/add-expense';
     }
 
     const body = await req.json();

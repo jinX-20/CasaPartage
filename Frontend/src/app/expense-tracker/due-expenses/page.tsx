@@ -8,7 +8,8 @@ export default function DueExpenses() {
   const [loading, setLoading] = useState(true);
   const [userDues, setUserDues] = useState<any[]>([]);
 
-  const userId = useUser().user?._id || "Unknown";
+  const userId = useUser().user._id || "Unknown";
+  const userName = useUser().user.name || "Unknown";
 
   const fetchDueExpenses = async () => {
     try {
@@ -138,7 +139,8 @@ export default function DueExpenses() {
             <DueExpenseCard
               key={index}
               {...due}
-              userr={userId}
+              userId={userId}
+              name={userName}
               markAllAsPaid={markAllAsPaid} // Pass the function as prop
             />
           ))

@@ -1,5 +1,5 @@
-const Expense = require("../models/expenses.cjs");
-const User = require("../models/user.cjs");
+Expense = require("../models/expenses.cjs");
+User = require("../models/user.cjs");
 
 const getDueExpenses = async (req, res) => {
   try {
@@ -61,10 +61,10 @@ const addExpense = async (req, res) => {
       splitDetails
     });
     for (const participant of newExpense.participants) {
-      participant.userId = getUserIdFromName(participant.name); 
+      participant.userId = await getUserIdFromName(participant.name); 
     }
     for (const split of newExpense.splitDetails) {
-      split.userId = getUserIdFromName(split.name); 
+      split.userId = await getUserIdFromName(split.name); 
     }
 
     await newExpense.save();
@@ -75,9 +75,13 @@ const addExpense = async (req, res) => {
   }
 };
 
-const getUserIdFromName = (userName) => {
-  const user = User.findOne({ name: userName });
-  return user._id;
+const getUserIdFromName = async (userName) => {
+  userName = userName.trim();
+  const currUser = await User.findOne({ name: userName });
+  if (!currUser) {
+    throw new Error(`User with name ${userName} not found`);
+  }
+  return currUser._id;
 }
 
 const markExpenseAsPaid = async (req, res) => {
