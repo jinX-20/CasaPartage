@@ -18,6 +18,7 @@ export async function POST(req) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      credentials: "include",
     });
 
     const data = await response.json();
@@ -49,7 +50,8 @@ export async function GET(req) {
     }
 
     // Make the request to the backend
-    response = await fetch(apiUrl);
+    response = await fetch(apiUrl, {credentials: "include",
+    });
     const data = await response.json();
 
     // Check if the response is OK

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useUser } from '../../UserContext/page';
+import { useUser } from '../../UserContext/UserContextProvider';
 
 interface ExpenseModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
   const [splitDetails, setSplitDetails] = useState<{ name: string; amount: number }[]>([]);
   const [splitEqually, setSplitEqually] = useState(false);
 
-  const userId = useUser().user._id || "Unknown";
+  const userId = useUser().user?._id || "Unknown";
   
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -54,6 +54,7 @@ export default function ExpenseModal({ isOpen, setIsOpen }: ExpenseModalProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(expenseData),
+        credentials: "include",
       });
 
       const result = await response.json();

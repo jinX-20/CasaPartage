@@ -80,16 +80,24 @@ const loginController = async (req, res) => {
 
         // token creation
         const token = JWT.sign({id: existingUser._id}, process.env.JWT_SECRET, {
-            expiresIn: "7d"
+            expiresIn: "1d"
         })
 
         const userData = { ...existingUser._doc };
-        delete userData.password; // password undefine kar diya
+        delete userData.password; 
+
+        // set the cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: false,
+            path:"/",
+        });
+        
 
         res.status(200).send({
             success: true,
             message: 'Login successfully',
-            token,
             userData
         });
 
@@ -103,4 +111,21 @@ const loginController = async (req, res) => {
     }
 };
 
-module.exports = { registerController, loginController };
+const getMe = async (req, res) => {
+    console.log("HERE IN GETME");
+    try {
+        console.log(req.headers.cookie);
+        console.log(req.cookies);
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ user: null });
+        }
+        const decoded = JWT.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select("-password");
+        res.json({ user });
+    } catch {
+        res.status(401).json({ user: null });
+    }
+};
+
+module.exports = { registerController, loginController, getMe };

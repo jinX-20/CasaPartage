@@ -1,15 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import DueExpenseCard from "../components/DueExpenseCard";
-import { useUser } from '../../UserContext/page';
+import { useUser } from '../../UserContext/UserContextProvider';
 
 export default function DueExpenses() {
   const [expenses, setExpenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [userDues, setUserDues] = useState<any[]>([]);
+  const {user, setUser, isLoading} = useUser();
 
-  const userId = useUser().user._id || "Unknown";
-  const userName = useUser().user.name || "Unknown";
+  const userId = user?._id;
+  const userName = user?.name;
 
   const fetchDueExpenses = async () => {
     try {
@@ -119,15 +120,18 @@ export default function DueExpenses() {
   };
 
   useEffect(() => {
-    fetchDueExpenses();
-  }, []);
+    if (!isLoading && user) {
+      fetchDueExpenses();
+    }
+  }, [isLoading, user]);
+
 
   useEffect(() => {
     console.log("User dues updated:", userDues);
   }, [userDues]);
   
 
-  if (loading) {
+  if (isLoading || loading) {
     return <div className="text-black">Loading...</div>;
   }
 

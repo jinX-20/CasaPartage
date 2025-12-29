@@ -1,12 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useUser } from '../../UserContext/page';
+import { useUser } from '../../UserContext/UserContextProvider';
 
 export default function YourExpenses() {
   const [expenses, setExpenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const userId = useUser().user._id || "Unknown";
-  const userName = useUser().user.name || "Unknown";
+  const {user, setUser, isLoading} = useUser();
+  const userId = user?._id;
+  const userName = user?.name;
 
   const fetchExpenses = async () => {
     try {
@@ -38,10 +39,12 @@ export default function YourExpenses() {
   };
 
   useEffect(() => {
-    fetchExpenses();
-  }, []);
+    if (!isLoading) {
+      fetchExpenses();
+    }
+  }, [isLoading, user]);
 
-  if (loading) {
+  if (isLoading || loading) {
     return <div className="text-black">Loading...</div>;
   }
 

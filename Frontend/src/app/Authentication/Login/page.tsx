@@ -1,9 +1,9 @@
 'use client';
 
-import { login, handleLoginResponse } from './actions';
+import { login } from './actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useUser } from '../../UserContext/page';
+import { useUser } from '../../UserContext/UserContextProvider';
 
 export default function Home() {
   const router = useRouter();

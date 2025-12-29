@@ -11,6 +11,7 @@ export async function register(formData: FormData) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data }),
+      credentials: "include",
     });
     const responseText = await response.json();
     if (!response.ok) {

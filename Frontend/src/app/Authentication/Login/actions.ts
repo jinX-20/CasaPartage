@@ -1,6 +1,4 @@
-"use server";
-
-import { cookies } from "next/headers";
+"use client";
 
 export async function login (formData: FormData) {
   try {
@@ -11,6 +9,7 @@ export async function login (formData: FormData) {
     const response = await fetch("http://localhost:5000/api/auth/login", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: "include",
       body: JSON.stringify({ data }),
     });
     const responseText = await response.json();
@@ -24,24 +23,10 @@ export async function login (formData: FormData) {
           throw new Error('Failed to login');
       }      
     } else {
-        return handleLoginResponse(responseText);
+        return responseText.userData;
     }
   } catch (error) {
     console.error('Error:', error);
     throw error;
   }
-}
-
-export async function handleLoginResponse(loginResponse: any) {
-  const { token, userData } = loginResponse;
-
-  cookies().set("token", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-  });
-
-  // return ONLY user info
-  return userData;
 }
