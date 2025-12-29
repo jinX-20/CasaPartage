@@ -15,8 +15,14 @@ export async function login (formData: FormData) {
     });
     const responseText = await response.json();
     if (!response.ok) {
-      console.error("Failed to Login:", responseText);
-      throw new Error('Failed to login');
+      switch (responseText.message) {
+        case "User Not Found":
+          throw new Error('User not found');
+        case "Invalid Credentials":
+          throw new Error('Invalid Credentials');
+        default:
+          throw new Error('Failed to login');
+      }      
     } else {
         return handleLoginResponse(responseText);
     }

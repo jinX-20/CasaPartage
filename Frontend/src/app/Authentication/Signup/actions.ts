@@ -12,10 +12,14 @@ export async function register(formData: FormData) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data }),
     });
-    const responseText = await response.text();
+    const responseText = await response.json();
     if (!response.ok) {
-      console.error("Failed to register:", responseText);
-      throw new Error('Failed to register');
+      switch (responseText.message) {
+        case "Email already registered, please Login":
+          throw new Error('Email already registered, please Login');
+        default:
+          throw new Error('Failed to register'); 
+      }      
     } else {
       return responseText;
     }

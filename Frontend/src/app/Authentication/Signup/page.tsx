@@ -18,8 +18,7 @@ export default function Home() {
       setMessage('Registration successful! Redirecting to login...');
       setTimeout(() => router.push('/Authentication/Login'), 2000);
     } catch (error) {
-      console.error("Registration failed:", error);
-      setMessage('Registration failed. Please try again.');
+      setMessage(error.message);
     } finally {
       setIsLoading(false);
     }
