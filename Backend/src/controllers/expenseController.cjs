@@ -22,7 +22,14 @@ const getDueExpenses = async (req, res) => {
 
 const getAllExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find(); // Query the expenses from the database
+    const { user } = req.query;
+    const expensesAsParticipant = await Expense.find({
+      "participants.userId": user
+    });
+    const expensesAsPaidBy = await Expense.find({
+      "paidBy": user
+    });
+    const expenses = [...expensesAsParticipant, ...expensesAsPaidBy]; 
     if (expenses.length === 0) {
       return res.status(200).json({ success: true, message: "No expenses found", expenses: [] });
     }

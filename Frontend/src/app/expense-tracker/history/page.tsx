@@ -1,13 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useUser } from '../../UserContext/UserContextProvider';
 
 export default function ExpenseHistory() {
   const [expenses, setExpenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const {user, setUser, isLoading} = useUser();
+  const userId = user?._id;
 
   const fetchExpensesHistory = async () => {
     try {
-      const response = await fetch("/api/expenses");
+      const response = await fetch(`/api/expenses?user=${userId}&history=true`);
 
       if (!response.ok) {
         console.error("Failed to fetch expenses history with status:", response.status);
@@ -35,10 +38,12 @@ export default function ExpenseHistory() {
   };
 
   useEffect(() => {
-    fetchExpensesHistory();
-  }, []);
+    if (!isLoading) {
+      fetchExpensesHistory();
+    }
+  }, [isLoading, user]);
 
-  if (loading) {
+  if (isLoading || loading) {
     return <div className="text-black">Loading...</div>;
   }
 

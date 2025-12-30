@@ -37,16 +37,17 @@ export async function GET(req) {
     const url = new URL(req.url);
     const paidBy = url.searchParams.get('paidBy');
     const userr = url.searchParams.get('user');
+    const isHistory = url.searchParams.get('history');
 
     let response;
     let apiUrl;
 
     if (paidBy) {
       apiUrl = `http://localhost:5000/api/expenses/your-expenses?paidBy=${paidBy}`;
-    } else if (userr) {
+    } else if (isHistory) {
+      apiUrl = `http://localhost:5000/api/expenses/get-all-expenses?user=${userr}`;
+    } else {
       apiUrl = `http://localhost:5000/api/expenses/due-expenses?user=${userr}`;
-    } else{
-      apiUrl = 'http://localhost:5000/api/expenses/get-all-expenses';
     }
 
     // Make the request to the backend
