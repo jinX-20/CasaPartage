@@ -24,7 +24,7 @@ export default function Home() {
       <p className="text-[#BC8D0B] pt-5 mt-3 text-2xl mx-2 font-bold font-acme">Where harmony meets household-</p>
       <p className="text-[#BC8D0B] text-2xl mx-2 font-bold font-acme">simplifying life for roommates!</p>
       <p className="text-[#BC8D0B] text-lg mt-7 mx-2 font-julee">Manage chores, expenses, and decisions effortlessly under one roof!</p>
-      <button className="bg-[#BC8D0B] text-white hover:bg-[#7d5e07] py-1.5 px-2 rounded my-5">Get Started!</button>
+      <Link href="/Authentication/Signup"><button className="bg-[#BC8D0B] text-white hover:bg-[#7d5e07] py-1.5 px-2 rounded my-5">Get Started!</button></Link>
     </div>
     <img src="/hero_pic.jpg" alt="Roommates image" className="h-auto md-custom-md:w-3/5 md-custom-xsm:full"/>
   </div>
@@ -65,7 +65,7 @@ export default function Home() {
   <div className="flex justify-center flex-col items-center my-14">
     <p className=" font-abeezee text-[#BC8D0B] text-3xl ">Ready to make roommate life a breeze?</p>
     <div>
-      <button className="bg-[#BC8D0B] text-white hover:bg-[#7d5e07] py-1.5 px-2 rounded my-5 mx-5">Sign Up for Free</button> 
+      <Link href="/Authentication/Signup"><button className="bg-[#BC8D0B] text-white hover:bg-[#7d5e07] py-1.5 px-2 rounded my-5 mx-5">Sign Up for Free</button></Link>
       <button>Learn More!</button>
     </div>
   </div>
