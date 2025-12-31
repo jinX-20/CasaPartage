@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useUser } from '../../UserContext/UserContextProvider';
+import ExpenseCard from "../components/ExpenseCard";
 
 export default function YourExpenses() {
   const [expenses, setExpenses] = useState<any[]>([]);
@@ -49,37 +50,22 @@ export default function YourExpenses() {
   }
 
   return (
-    <div className="p-6 text-black">
-      <h1 className="text-2xl font-semibold">Your Expenses</h1>
-      {expenses.length === 0 ? (
-        <p>No expenses to display.</p>
-      ) : (
-        <div className="mt-4 space-y-4">
-          {expenses.map((expense: any) => (
-            <div key={expense._id} className="bg-[#EAE3CF] p-4 rounded-lg shadow-lg border border-gray-300">
-              <h2 className="text-lg font-bold">{expense.description}</h2>
-              <p>Total Amount: Rs.{expense.totalAmount}/-</p>
-              <p>Date: {expense.date ? new Date(expense.date).toLocaleDateString() : "-"}</p>
-              <p>Paid By: {userName}</p>
-              {expense.splitDetails?.length > 0 && (
-                <div className="mt-2 bg-[#EFEDEA] p-3 rounded-md">
-                  <h3 className="font-medium">Split Details:</h3>
-                  <ul className="text-sm space-y-1">
-                    {expense.splitDetails.map((detail: any, idx: number) => {
-                      const participant = expense.participants.find((p: any) => p.userId === detail.userId);
-                      return (
-                        <li key={idx}>
-                          {detail.name}: Rs.{detail.amount}/- ({participant ? participant.status : "-"})
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="p-6 bg-white">
+      <div className="mt-6 space-y-6">
+        {expenses.length > 0 ? (
+          expenses.map((expense: any, index) => (
+            <ExpenseCard
+              {...expense}
+              paidBy={userName}
+            />
+          ))
+        ) : (
+          <div className="p-6 text-black">
+            <h1 className="text-2xl font-semibold">Your Expenses</h1>
+            <p>No more expenses!</p>
+          </div>
+        )}
+      </div>
     </div>
-  );
+  )
 }
