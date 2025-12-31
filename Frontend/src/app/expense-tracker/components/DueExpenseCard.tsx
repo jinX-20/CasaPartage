@@ -37,10 +37,10 @@ const DueExpenseCard: React.FC<DueExpenseProps> = ({ name, amount, expenses, use
           {expenses.map((expense, index) => (
             <div key={index} className="mb-3">
               <p>• <strong>Description:</strong> {expense.description}</p>
-              <p><strong>Your amount:</strong> {expense.youramount}</p>
-              <p><strong>Total amount:</strong> {expense.total}</p>
+              <p><strong>Your amount:</strong> Rs.{expense.youramount}</p>
+              <p><strong>Total amount:</strong> Rs.{expense.total}</p>
               <p><strong>Others:</strong> {expense.others}</p>
-              <p><strong>Date:</strong> {expense.date ? expense.date : '-'}</p>
+              <p><strong>Date:</strong> {expense.date ? new Date (expense.date).toLocaleDateString() : '-'}</p>
 
               <hr className="border-gray-300 my-2" />
             </div>

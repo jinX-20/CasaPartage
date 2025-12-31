@@ -1,5 +1,6 @@
 Expense = require("../models/expenses.cjs");
 User = require("../models/user.cjs");
+const { ObjectId } = require('mongodb');
 
 const getDueExpenses = async (req, res) => {
   try {
@@ -91,6 +92,21 @@ const getUserIdFromName = async (userName) => {
   return currUser._id;
 }
 
+const getUserNameFromUserId = async (req, res) => {
+  try {
+    const userIdString = req.query.user;
+    const user = new ObjectId(userIdString);
+    const currUser = await User.findOne({ "_id": user });
+    if (!currUser) {
+      return res.status(404).json({ success:false, message: "No such user found" });
+    }
+    return res.status(200).json({ success:true, message: "Username found", userName: currUser.name});
+
+  } catch (error) {
+    return res.status(500).json({ success:false, message: "Server error", error});
+  }
+}
+
 const markExpenseAsPaid = async (req, res) => {
   try {
     const { expenseIds, user } = req.body; 
@@ -131,4 +147,4 @@ const deleteExpense = async (req, res) => {
   }
 };
 
-module.exports = { getAllExpenses, addExpense, deleteExpense, markExpenseAsPaid, getYourExpenses, getDueExpenses};
+module.exports = { getAllExpenses, addExpense, deleteExpense, markExpenseAsPaid, getYourExpenses, getDueExpenses, getUserNameFromUserId};

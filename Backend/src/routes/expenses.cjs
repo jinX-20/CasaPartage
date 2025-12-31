@@ -5,7 +5,8 @@ const {
   deleteExpense,
   markExpenseAsPaid,
   getYourExpenses,
-  getDueExpenses
+  getDueExpenses,
+  getUserNameFromUserId
 } = require("../controllers/expenseController.cjs");
 
 const router = express.Router();
@@ -24,5 +25,8 @@ router.delete("/:id", deleteExpense);
 
 // Mark expense as paid
 router.post("/due-expenses/mark-as-paid", markExpenseAsPaid);
+
+// Get user name from user id
+router.get("/getusernamefromuserid", getUserNameFromUserId);
 
 module.exports = router;

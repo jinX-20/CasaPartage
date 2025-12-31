@@ -10,7 +10,21 @@ export default function DueExpenses() {
   const {user, setUser, isLoading} = useUser();
 
   const userId = user?._id;
-  const userName = user?.name;
+
+  const fetchUserNameFromUserId = async (userId: String) => {
+    try {
+      const response = await fetch(`/api/expenses?user=${userId}&getUserNameFromUserId=true`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch username");
+      }
+      const data = await response.json();
+      return data.userName;
+      
+    } catch(error) {
+      return "undefined";
+      console.log(error.message);
+    }
+  }
 
   const fetchDueExpenses = async () => {
     try {
@@ -62,7 +76,7 @@ export default function DueExpenses() {
         if (userSplit) {
           if (!dues[paidBy]) {
             dues[paidBy] = {
-              name: paidBy,
+              name: fetchUserNameFromUserId(paidBy),
               amount: 0,
               expenses: [],
             };
@@ -78,7 +92,7 @@ export default function DueExpenses() {
             youramount: userSplit.amount,
             others: expense.splitDetails
               .filter((split: any) => split.userId !== userId)
-              .map((split: any) => split.userId)
+              .map((split: any) => split.name)
               .join(", "),
             date: expense.date,
           });
@@ -144,13 +158,13 @@ export default function DueExpenses() {
               key={index}
               {...due}
               userId={userId}
-              name={userName}
               markAllAsPaid={markAllAsPaid} // Pass the function as prop
             />
           ))
         ) : (
-          <div className="text-2xl text-black">
-            No more due expenses!
+          <div className="p-6 text-black">
+            <h1 className="text-2xl font-semibold">Due Expenses</h1>
+            <p>No more due expenses!</p>
           </div>
         )}
       </div>

@@ -38,6 +38,7 @@ export async function GET(req) {
     const paidBy = url.searchParams.get('paidBy');
     const userr = url.searchParams.get('user');
     const isHistory = url.searchParams.get('history');
+    const isGetUserNameFromUserId = url.searchParams.get('getUserNameFromUserId');
 
     let response;
     let apiUrl;
@@ -46,6 +47,8 @@ export async function GET(req) {
       apiUrl = `http://localhost:5000/api/expenses/your-expenses?paidBy=${paidBy}`;
     } else if (isHistory) {
       apiUrl = `http://localhost:5000/api/expenses/get-all-expenses?user=${userr}`;
+    } else if (isGetUserNameFromUserId){
+      apiUrl = `http://localhost:5000/api/expenses/getusernamefromuserid?user=${userr}`;
     } else {
       apiUrl = `http://localhost:5000/api/expenses/due-expenses?user=${userr}`;
     }
